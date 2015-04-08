@@ -1,4 +1,6 @@
 
+// Copyright (c) 2015 Max Weller
+
 // To use:
 // ./brute_force N group_count group_index [logname]
 //    N  modulus (hex)

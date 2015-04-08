@@ -1,4 +1,6 @@
 
+// Copyright (c) 2015 Max Weller
+
 void printasn1(BIGNUM* n, BIGNUM* e, BIGNUM* d) {
 
     BIGNUM* p = BN_new();

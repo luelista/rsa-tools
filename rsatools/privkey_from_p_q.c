@@ -1,4 +1,6 @@
 
+// Copyright (c) 2015 Max Weller
+
 // To use:
 // ./check_priv_key N D > test.cfg
 //    N  modulus (hex)
@@ -10,8 +12,6 @@
 
 #include <string.h>
 #include <openssl/bn.h>
-
-#include "printasn1.c"
 
 int main(int argc, char** argv) {
   BN_CTX *ctx = BN_CTX_new();
@@ -34,9 +34,7 @@ int main(int argc, char** argv) {
   BN_mul(phi, p, q, ctx);
   BN_mod_inverse(d, e, phi, ctx);
 
-  //fprintf (stderr, "d=%s \n", BN_bn2hex(d));
-
-  printasn1(n,e,d);
+  fprintf (stderr, "d=%s \n", BN_bn2hex(d));
   return 0;
   
 }

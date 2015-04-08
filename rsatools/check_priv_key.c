@@ -1,4 +1,6 @@
 
+// Copyright (c) 2015 Max Weller
+
 // To use:
 // ./check_priv_key N D > test.cfg
 //    N  modulus (hex)
