@@ -69,15 +69,19 @@ int main(int argc, char** argv) {
   BN_sub(start_p, sqr, start_p);
   BN_add(end_p, start_p, lot_size);
   
+  if (!BN_is_odd(start_p)) BN_add_word(start_p, 1);
+  BN_div_word(lot_size, 2);
   
+  BIGNUM * ctr = BN_new();
+  BN_copy(ctr, lot_size);
   
   LOG("Handling lot from %s to %s (size %s)\n", 
   BN_bn2dec(start_p), BN_bn2dec(end_p), BN_bn2dec(lot_size));
   
-  if (!BN_is_odd(start_p)) BN_add_word(start_p, 1);
-  BN_div_word(lot_size, 2);
-  int progr = 9000;
-  while(!BN_is_zero(lot_size)) {
+  BN_div_word(lot_size, 10000);//percentage stuff...
+  
+  int progr = 900000;
+  while(!BN_is_zero(ctr)) {
     
     BN_mod(rest, n, start_p, ctx);
     if (BN_is_zero(rest) && !BN_is_one(start_p)) {
@@ -94,11 +98,13 @@ int main(int argc, char** argv) {
     
     BN_add_word(start_p, 2);
     
-    BN_sub_word(lot_size, 1);
+    BN_sub_word(ctr, 1);
     
     if (progr-- == 0) {
       progr = 900000;
-      printf("\033[2K Running ... \033[35;1m %s \033[0m \r", BN_bn2dec(lot_size)); fflush(stdout);
+      BN_div(rest, NULL, ctr, lot_size, ctx);
+      float f = ((float)atoi(BN_bn2dec(rest)))/100;
+      printf("\033[2K Running ... \033[35;1m %02.2f %%    %s \033[0m \r", f, BN_bn2dec(ctr)); fflush(stdout);
     }
   }
   
