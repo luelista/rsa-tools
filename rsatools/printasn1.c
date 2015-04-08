@@ -10,6 +10,7 @@ void printasn1(BIGNUM* n, BIGNUM* e, BIGNUM* d) {
     
     puts("asn1=SEQUENCE:rsa_key");
     puts("[rsa_key]");
+    puts("version=INTEGER:0");
     printf("modulus=INTEGER:%s\n", BN_bn2dec(n));
     printf("pubExp=INTEGER:%s\n", BN_bn2dec(e));
     printf("privExp=INTEGER:%s\n", BN_bn2dec(d));
