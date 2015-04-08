@@ -11,6 +11,8 @@
 #include <string.h>
 #include <openssl/bn.h>
 
+#include "printasn1.c"
+
 int main(int argc, char** argv) {
   BIGNUM *n;
   n = BN_new();
@@ -27,25 +29,7 @@ int main(int argc, char** argv) {
   
   if (ok) {
     fprintf(stderr, "\033[32mOK\033[39m\n");
-    BIGNUM* p = BN_new();
-    BIGNUM* q = BN_new();
-    BIGNUM* dp = BN_new();
-    BIGNUM* dq = BN_new();
-    BIGNUM* u = BN_new();
-    SfmToCrt(n,e,d,p,q,dp,dq,u);
-    
-    puts("asn1=SEQUENCE:rsa_key");
-    puts("[rsa_key]");
-    puts("# Input values");
-    printf("modulus=INTEGER:%s\n", BN_bn2dec(n));
-    printf("pubExp=INTEGER:%s\n", BN_bn2dec(e));
-    printf("privExp=INTEGER:%s\n", BN_bn2dec(d));
-    puts("# Results");
-    printf("p=INTEGER:%s\n", BN_bn2dec(p));
-    printf("q=INTEGER:%s\n", BN_bn2dec(q));
-    printf("e1=INTEGER:%s\n", BN_bn2dec(dp));
-    printf("e2=INTEGER:%s\n", BN_bn2dec(dq));
-    printf("coeff=INTEGER:%s\n", BN_bn2dec(u));
+    printasn1(n,e,d);
     
   } else {
     fprintf(stderr, "Incorrect");
