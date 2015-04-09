@@ -13,6 +13,8 @@
 #include <string.h>
 #include <openssl/bn.h>
 
+#include "printasn1.c"
+
 int main(int argc, char** argv) {
   BN_CTX *ctx = BN_CTX_new();
   BN_CTX_start(ctx);
@@ -34,7 +36,9 @@ int main(int argc, char** argv) {
   BN_mul(phi, p, q, ctx);
   BN_mod_inverse(d, e, phi, ctx);
 
-  fprintf (stderr, "d=%s \n", BN_bn2hex(d));
+  //fprintf (stderr, "d=%s \n", BN_bn2hex(d));
+
+  printasn1(n,e,d);
   return 0;
   
 }
