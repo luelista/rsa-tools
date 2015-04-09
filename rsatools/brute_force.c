@@ -10,6 +10,7 @@
 //
 
 #include <stdio.h>
+#include <unistd.h>
 #include <time.h>
 #include <string.h>
 #include <openssl/bn.h>
@@ -60,7 +61,7 @@ int main(int argc, char** argv) {
   LOG("SQR = %s\n", BN_bn2dec(sqr));
   
   BIGNUM * lot_size = BN_new();
-  BIGNUM * rest = BN_new();
+  BIGNUM * rest = BN_CTX_get(ctx);
   BN_div(lot_size, rest, sqr, group_count, ctx);
   //BN_add(lot_size, lot_size, rest);
   BIGNUM * start_p = BN_new();
@@ -80,7 +81,21 @@ int main(int argc, char** argv) {
   
   BN_div_word(lot_size, 10000);//percentage stuff...
   
-  int progr = 900000;
+  char fn[30];
+      snprintf(fn, 30, "bf_%s_%s.dat", BN_bn2dec(group_count), BN_bn2dec(group_index));
+  
+  FILE* dat = fopen(fn, "r");
+  if (dat != NULL) {
+    char buff[1000];
+    fgets(buff, 999, dat);
+    BN_dec2bn(&start_p, buff);
+    fgets(buff, 999, dat);
+    BN_dec2bn(&ctr, buff);
+    LOG("Resuming at %s\n", BN_bn2dec(start_p)); 
+    fclose(dat);
+  }
+  
+  int progr = 9000000;
   while(!BN_is_zero(ctr)) {
     
     BN_mod(rest, n, start_p, ctx);
@@ -101,10 +116,14 @@ int main(int argc, char** argv) {
     BN_sub_word(ctr, 1);
     
     if (progr-- == 0) {
-      progr = 900000;
+      progr = 9000000;
       BN_div(rest, NULL, ctr, lot_size, ctx);
       float f = ((float)atoi(BN_bn2dec(rest)))/100;
-      printf("\033[2K Running ... \033[35;1m %02.2f %%    %s \033[0m \r", f, BN_bn2dec(ctr)); fflush(stdout);
+      printf("\033[2K Running ... \033[35;1m %02.2f %%    %s \033[0m \r", f, BN_bn2dec(start_p)); fflush(stdout);
+      FILE* dat = fopen(fn, "w");
+      fprintf(dat, "%s\n", BN_bn2dec(start_p));
+      fprintf(dat, "%s\n", BN_bn2dec(ctr));
+      fclose(dat);
     }
   }
   
