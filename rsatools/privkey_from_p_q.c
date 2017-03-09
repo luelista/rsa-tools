@@ -2,9 +2,10 @@
 // Copyright (c) 2015 Max Weller
 
 // To use:
-// ./check_priv_key N D > test.cfg
-//    N  modulus (hex)
-//    D  privateExponent (hex)
+// ./privkey_from_p_q P Q > test.cfg
+// #   P, Q  Private key factors
+//
+// # e = 65537 hard coded exponent
 //
 // openssl asn1parse -genconf test.cfg -out newkey.der
 // openssl rsa -in newkey.der -inform der -text -check
